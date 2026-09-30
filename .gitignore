@@ -1,0 +1,10 @@
+# .NET
+bin/
+obj/
+.vs/
+
+# Databasen
+*.db
+
+# Node
+node_modules/
