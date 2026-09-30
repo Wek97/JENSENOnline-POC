@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+
 namespace JensenOnline.Api;
 
 public class User
@@ -32,4 +34,17 @@ public class OrderItem
     public int ProductId { get; set; }
     public int Quantity { get; set; }
     public decimal UnitPrice { get; set; }
+}
+
+public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+{
+    public DbSet<User> Users => Set<User>();
+    public DbSet<Product> Products => Set<Product>();
+    public DbSet<Order> Orders => Set<Order>();
+    public DbSet<OrderItem> orderItems => Set<OrderItem>();
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
+    }
 }
