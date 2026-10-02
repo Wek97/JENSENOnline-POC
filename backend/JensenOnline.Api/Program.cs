@@ -6,6 +6,14 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("Frontend", policy =>
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod());
+});
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -25,6 +33,8 @@ using (var scope = app.Services.CreateScope())
         db.SaveChanges();
     }
 }
+
+app.UseCors("Frontend");
 
 app.MapGet("/api/products", async (AppDbContext db) =>
     Results.Ok(await db.Products
