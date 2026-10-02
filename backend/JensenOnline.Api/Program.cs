@@ -1,10 +1,18 @@
 using Microsoft.EntityFrameworkCore;
 using JensenOnline.Api;
+using Microsoft.AspNetCore.Identity;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
+using System.IdentityModel.Tokens.Jwt;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("Default")));
+
+builder.Services.AddControllers();
 
 builder.Services.AddCors(options =>
 {
@@ -13,6 +21,40 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader()
               .AllowAnyMethod());
 });
+
+var jwtKey = builder.Configuration["Jwt:Key"]
+    ?? throw new InvalidOperationException("Jwt:Key saknas i user-secrets.");
+
+builder.Services.AddAuthentication(opt =>
+{
+    opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+    .AddJwtBearer(opt =>
+    {
+        opt.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = "http://localhost:5000",
+            ValidAudience = "http://localhost:5000",
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
+        };
+
+
+        opt.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                context.Token = context.Request.Cookies["X-Access-Token"];
+                return Task.CompletedTask;
+            }
+        };
+    });
+
+builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
@@ -32,13 +74,34 @@ using (var scope = app.Services.CreateScope())
         );
         db.SaveChanges();
     }
+
+    if (!db.Users.Any(u => u.Role == "admin"))
+    {
+        var adminPassword = app.Configuration["Admin:Password"];
+
+        if (!string.IsNullOrWhiteSpace(adminPassword))
+        {
+            var admin = new User { Email = "admin@jensenonline.se", Role = "admin" };
+            admin.PasswordHash = new PasswordHasher<User>().HashPassword(admin, adminPassword);
+            db.Users.Add(admin);
+            db.SaveChanges();
+        }
+    }
 }
 
 app.UseCors("Frontend");
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
 
 app.MapGet("/api/products", async (AppDbContext db) =>
     Results.Ok(await db.Products
         .Select(p => new { p.Id, p.Name, p.Description, p.Category, p.Price })
         .ToListAsync()));
+
+
+
 
 app.Run();

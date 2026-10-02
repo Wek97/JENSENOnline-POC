@@ -48,3 +48,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         modelBuilder.Entity<User>().HasIndex(u => u.Email).IsUnique();
     }
 }
+
+public record RegisterRequest(string Email, string Password);
+
+public record LoginRequest(string Email, string Password);
