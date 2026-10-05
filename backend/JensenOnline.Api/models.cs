@@ -52,3 +52,9 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
 public record RegisterRequest(string Email, string Password);
 
 public record LoginRequest(string Email, string Password);
+
+public record ProductRequest(string Name, string Description, string Category, decimal Price);
+
+public record OrderItemRequest(int ProductId, int Quantity);
+
+public record OrderRequest(List<OrderItemRequest> Items);

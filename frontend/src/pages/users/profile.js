@@ -12,6 +12,7 @@ const initApp = async () => {
     location.href = "/pages/users/login.html";
   } else {
     displayUserInfo(user);
+    loadOrders();
   }
 };
 
@@ -25,6 +26,31 @@ const displayUserInfo = (user) => {
   role.textContent = `Roll: ${user.role}`;
 
   userInfo.append(email, role);
+};
+
+const loadOrders = async () => {
+  const orders = await new DataClient("orders/mine").listAll();
+  const ordersElement = document.querySelector("#orders");
+
+  if (!orders || orders.length === 0) {
+    ordersElement.textContent = "Du har inga beställningar än.";
+    return;
+  }
+
+  orders.forEach((order) => {
+    const heading = document.createElement("h4");
+    const date = new Date(order.createdAt).toLocaleDateString("sv-SE");
+    heading.textContent = `Order ${order.id} – ${date} – ${order.total.toFixed(2)} Kr`;
+
+    const list = document.createElement("ul");
+    order.items.forEach((item) => {
+      const li = document.createElement("li");
+      li.textContent = `${item.productName}, ${item.quantity} st à ${item.unitPrice.toFixed(2)} Kr`;
+      list.append(li);
+    });
+
+    ordersElement.append(heading, list);
+  });
 };
 
 const logOut = async () => {

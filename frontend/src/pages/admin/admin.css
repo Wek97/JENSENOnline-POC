@@ -1,0 +1,17 @@
+@import "../../assets/css/site.css";
+
+#admin-products {
+  margin-top: 2rem;
+}
+
+.admin-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: solid 1px var(--primary-border-color);
+  padding: 0.5rem 0;
+}
+
+.admin-item button {
+  width: auto;
+}

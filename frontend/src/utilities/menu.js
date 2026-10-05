@@ -50,6 +50,7 @@ export default class Navbar {
           </li>
           <li class="menu-item"><a href="/">Start</a></li>
           <li class="menu-item"><a href="/pages/products/products.html">Produkter</a></li>
+          <li class="menu-item"><a href="/pages/cart/cart.html">Kundvagn</a></li>
         </ul>
       </nav>`;
   }

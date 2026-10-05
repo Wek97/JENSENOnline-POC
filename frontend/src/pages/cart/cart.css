@@ -1,0 +1,19 @@
+@import "../../assets/css/site.css";
+
+.cart-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: solid 1px var(--primary-border-color);
+  padding: 0.5rem 0;
+}
+
+.cart-item button,
+#order-button {
+  width: auto;
+}
+
+#cart-total {
+  margin: 1rem 0;
+  font-weight: 700;
+}

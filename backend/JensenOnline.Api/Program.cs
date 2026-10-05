@@ -97,12 +97,4 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-app.MapGet("/api/products", async (AppDbContext db) =>
-    Results.Ok(await db.Products
-        .Select(p => new { p.Id, p.Name, p.Description, p.Category, p.Price })
-        .ToListAsync()));
-
-
-
-
 app.Run();

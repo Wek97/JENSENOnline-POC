@@ -31,6 +31,9 @@
 }
 
 .product-item p {
-  float: right;
-  margin-right: 0.5rem;
+  margin-bottom: 0.3rem;
+}
+
+.product-item button {
+  margin-top: 0.5rem;
 }
