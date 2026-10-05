@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="sv">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="users.css" />
+    <script type="module" src="login.js" defer></script>
+    <title>JENSENOnline | Logga in</title>
+  </head>
+  <body>
+    <header></header>
+    <main class="container">
+      <h1>Logga in</h1>
+      <form>
+        <div class="form-controls">
+          <input required type="email" name="email" id="email" />
+          <label for="email">E-post</label>
+        </div>
+        <div class="form-controls">
+          <input required type="password" name="password" id="password" />
+          <label for="password">Lösenord</label>
+        </div>
+        <button class="btn btn-rounded">Logga in</button>
+        <p id="message"></p>
+        <p>Inget konto?</p>
+        <a href="/pages/users/register.html"
+          >Klicka här för att skapa ett konto</a
+        >
+      </form>
+    </main>
+  </body>
+</html>
