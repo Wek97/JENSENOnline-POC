@@ -16,4 +16,5 @@ namespace JensenOnline.Api.Controllers
             return Ok(new { message = "Inloggad som admin" });
         }
     }
+
 }
